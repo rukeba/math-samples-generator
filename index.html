@@ -1,0 +1,79 @@
+﻿<html doctype="html">
+<head>
+	<title>Генератор примеров</title>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<style type="text/css">
+		body {
+			padding: 1em;
+			font-size: 17px;
+			line-height: 38px;
+		}
+		span {
+			white-space: nowrap;
+		}
+		b {
+			display: inline-block;
+			height: 2em;
+			min-width: 2.5em;
+			margin: 10px 5px;
+			padding: 5px 8px;
+			border: 1px solid black;
+			font-weight: normal;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div id="output"></div>
+</body>
+<script>
+	jQuery(function($){
+		var c = 40, min=0, max=30;
+		var range = max - min;
+		var n = [];
+		var curr = 0, next = 0;
+		var s = '';
+		var get_next_random = function(){
+			return Math.floor((Math.random() * range) - range/2);
+		};
+
+		n.push(curr);
+		for( var i = 0; i < c; i++){
+			do {
+				k = get_next_random();
+			} while( curr + k < min || curr + k > max);
+
+			n.push(k);
+			next = curr + k;
+			curr = next;
+		}
+		n.push(-curr);
+
+
+		var $d = $('#output'), wrap='';
+		var curr = n[0], next = 0;
+		for( var i = 1; i < n.length; i++){
+			k = n[i];
+			next = curr + k;
+			if ( i == 1){
+				s = `<b>${curr}</b>`;
+			} else {
+				s = `<b>&nbsp;</b>`;
+			}
+			s += k >= 0 ? `+ ${k}` : `&minus; ${Math.abs(k)}`;
+			if ( i < n.length - 1){
+				s += ' = <b>&nbsp;</b> &rarr;';
+				wrap = ` <i> </i>`;
+			} else {
+				s += ` = <b>${next}</b>`;
+				wrap = '';
+			}
+			$d.append($('<span>' + s + '</span> '));
+			if (wrap) {
+				$d.append($(wrap));
+			}
+			curr = next;
+		}
+	});
+</script>
+</html>
